@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateObjectiveDTO } from './dto/CreateObjectiveDTO';
+import { FamiliesService } from 'src/families/families.service';
 
 @Injectable()
 export class ObjectivesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly familiesService: FamiliesService) {}
 
   async createObjective(data: CreateObjectiveDTO, userId: string) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
 
     const familyId =
-      user.familyId ?? (await this.prisma.family.create({ data: {} })).id;
+      user.familyId ?? (await this.familiesService.createFamily()).id;
 
     const newObjective = await this.prisma.objective.create({
       data: {
@@ -20,6 +21,8 @@ export class ObjectivesService {
         familyId,
       },
     });
+
+    await this.prisma.user.update({ where: { id: user.id }, data: { familyId: familyId } })
 
     return newObjective;
   }
