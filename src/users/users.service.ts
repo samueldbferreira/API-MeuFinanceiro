@@ -32,4 +32,15 @@ export class UsersService {
 
     return newUser;
   }
+
+  async findById(id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      return null;
+    }
+
+    const { password, ...userData } = user;
+
+    return userData;
+  }
 }
