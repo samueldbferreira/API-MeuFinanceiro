@@ -5,7 +5,10 @@ import { FamiliesService } from 'src/families/families.service';
 
 @Injectable()
 export class ObjectivesService {
-  constructor(private readonly prisma: PrismaService, private readonly familiesService: FamiliesService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly familiesService: FamiliesService,
+  ) {}
 
   async createObjective(data: CreateObjectiveDTO, userId: string) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
@@ -22,8 +25,22 @@ export class ObjectivesService {
       },
     });
 
-    await this.prisma.user.update({ where: { id: user.id }, data: { familyId: familyId } })
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { familyId: familyId },
+    });
 
     return newObjective;
+  }
+
+  async getObjectives(userId: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user.familyId) {
+      return [];
+    }
+
+    return await this.prisma.objective.findMany({
+      where: { familyId: user.familyId },
+    });
   }
 }
