@@ -21,16 +21,17 @@ model User {
   password  String
   familyId  String?
 
-  family     Family?     @relation(fields: [familyId], references: [id])
-  objectives Objective[]
+  family      Family?       @relation(fields: [familyId], references: [id])
+  objectives  Objective[]
+  Transaction Transaction[]
 }
 
 model Objective {
-  id       String @id @default(uuid()) @map("_id")
-  title    String
-  total    Float
-  userId   String
-  familyId String
+  id        String   @id @default(uuid()) @map("_id")
+  title     String
+  total     Float
+  userId    String
+  familyId  String
   createdAt DateTime @default(now())
 
   creator User   @relation(fields: [userId], references: [id])
@@ -42,4 +43,17 @@ model Family {
 
   members    User[]
   objectives Objective[]
+}
+
+model Transaction {
+  id               String  @id @default(uuid()) @map("_id")
+  userId           String
+  title            String
+  amount           Float
+  category         String
+  type             String
+  isInstallment    Boolean
+  installmentCount Int?
+
+  creator User @relation(fields: [userId], references: [id])
 }
