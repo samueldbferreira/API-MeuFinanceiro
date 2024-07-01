@@ -27,7 +27,7 @@ export class CreateTransactionDTO {
   @IsNotEmpty()
   amount: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(TransactionCategories)
   category: string;
 

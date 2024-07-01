@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateTransactionDTO } from './dto/CreateTransactionDTO';
 
@@ -7,10 +7,6 @@ export class TransactionService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createTransaction(data: CreateTransactionDTO, userId: string) {
-    if (data.isInstallment && !data.installmentCount) {
-      throw new BadRequestException('Informe a quantidade de parcelas.');
-    }
-
     const newTransaction = await this.prisma.transaction.create({
       data: {
         title: data.title,

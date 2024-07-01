@@ -50,7 +50,7 @@ model Transaction {
   userId           String
   title            String
   amount           Float
-  category         String
+  category         String?
   type             String
   isInstallment    Boolean
   installmentCount Int?
