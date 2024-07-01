@@ -2,10 +2,11 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateUserDTO } from './dto/CreateUserDTO';
 import { hash } from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly JwtService: JwtService) {}
 
   async findByEmail(email: string) {
     return this.prisma.user.findUnique({ where: { email } });
@@ -30,7 +31,13 @@ export class UsersService {
       },
     });
 
-    return newUser;
+    const payload = { sub: newUser.id, username: newUser.firstName };
+    const token = await this.JwtService.signAsync(payload);
+
+    return {
+      access_token: token,
+      user: newUser
+    };
   }
 
   async findById(id: string) {
