@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateObjectiveDTO } from './dto/CreateObjectiveDTO';
 import { FamiliesService } from 'src/families/families.service';
+import { UpdateObjectiveDTO } from './dto/UpdateObjectiveDTO';
 
 @Injectable()
 export class ObjectivesService {
@@ -64,5 +65,16 @@ export class ObjectivesService {
     }
 
     await this.prisma.objective.delete({ where: { id: objectiveId } });
+  }
+
+  async updateObjective(objectiveId: string, objectiveData: UpdateObjectiveDTO) {
+    const objective = await this.prisma.objective.findUnique({
+      where: { id: objectiveId },
+    });
+    if (!objective) {
+      throw new BadRequestException("ID do objetivo é inválido");
+    }
+
+    await this.prisma.objective.update({ where: { id: objectiveId }, data: objectiveData });
   }
 }
