@@ -22,9 +22,13 @@ export class AuthService {
     }
 
     const payload = { sub: user.id, username: user.firstName };
+    const token = await this.JwtService.signAsync(payload);
+
+    const { password: _, ...userData } = user;
 
     return {
-      access_token: await this.JwtService.signAsync(payload),
+      access_token: token,
+      user: userData,
     };
   }
 }
