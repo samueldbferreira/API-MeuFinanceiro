@@ -39,13 +39,16 @@ export class ObjectivesController {
     return await this.objectivesService.getObjectives(userId);
   }
 
-  @Delete(":id")
+  @Delete(':id')
   async deleteObjective(@Param('id') id: string) {
     return await this.objectivesService.deleteObjective(id);
   }
 
-  @Put(":id")
-  async updateObjective(@Param('id') id: string, @Body() bodyData: UpdateObjectiveDTO) {
+  @Put(':id')
+  async updateObjective(
+    @Param('id') id: string,
+    @Body() bodyData: UpdateObjectiveDTO,
+  ) {
     return await this.objectivesService.updateObjective(id, bodyData);
   }
 }

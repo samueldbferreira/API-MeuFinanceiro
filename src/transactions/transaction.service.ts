@@ -21,4 +21,8 @@ export class TransactionService {
 
     return newTransaction;
   }
+
+  async getAll(userId: string) {
+    return await this.prisma.transaction.findMany({ where: { userId } });
+  }
 }

@@ -1,4 +1,12 @@
-import { BadRequestException, Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateTransactionDTO } from './dto/CreateTransactionDTO';
 import { TransactionService } from './transaction.service';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -21,5 +29,12 @@ export class TransactionController {
     }
 
     return await this.transactionService.createTransaction(bodyData, userId);
+  }
+
+  @Get('')
+  async getTransactions(@Req() req) {
+    const { sub: userId } = req.user;
+
+    return await this.transactionService.getAll(userId);
   }
 }

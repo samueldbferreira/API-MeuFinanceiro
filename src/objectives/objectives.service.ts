@@ -42,14 +42,14 @@ export class ObjectivesService {
 
     return await this.prisma.objective.findMany({
       where: { familyId: user.familyId },
-      include: { creator: { select: { firstName: true, lastName: true } } }
+      include: { creator: { select: { firstName: true, lastName: true } } },
     });
   }
 
   async getObjective(objectiveId: string) {
     const objective = await this.prisma.objective.findUnique({
       where: { id: objectiveId },
-      include: { creator: { select: { firstName: true, lastName: true } } }
+      include: { creator: { select: { firstName: true, lastName: true } } },
     });
     if (!objective) {
       return null;
@@ -62,21 +62,25 @@ export class ObjectivesService {
     const objective = await this.prisma.objective.findUnique({
       where: { id: objectiveId },
     });
-    if (!objective) {
-      throw new BadRequestException("ID do objetivo é inválido");
+    if (objective) {
+      await this.prisma.objective.delete({ where: { id: objectiveId } });
     }
-
-    await this.prisma.objective.delete({ where: { id: objectiveId } });
   }
 
-  async updateObjective(objectiveId: string, objectiveData: UpdateObjectiveDTO) {
+  async updateObjective(
+    objectiveId: string,
+    objectiveData: UpdateObjectiveDTO,
+  ) {
     const objective = await this.prisma.objective.findUnique({
       where: { id: objectiveId },
     });
     if (!objective) {
-      throw new BadRequestException("ID do objetivo é inválido");
+      throw new BadRequestException('ID do objetivo é inválido');
     }
 
-    await this.prisma.objective.update({ where: { id: objectiveId }, data: objectiveData });
+    await this.prisma.objective.update({
+      where: { id: objectiveId },
+      data: objectiveData,
+    });
   }
 }
