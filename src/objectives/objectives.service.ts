@@ -43,4 +43,15 @@ export class ObjectivesService {
       where: { familyId: user.familyId },
     });
   }
+
+  async getObjective(objectiveId: string) {
+    const objective = await this.prisma.objective.findUnique({
+      where: { id: objectiveId },
+    });
+    if (!objective) {
+      return null;
+    }
+
+    return objective;
+  }
 }

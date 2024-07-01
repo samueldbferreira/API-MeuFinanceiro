@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateObjectiveDTO } from './dto/CreateObjectiveDTO';
 import { ObjectivesService } from './objectives.service';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -14,6 +22,11 @@ export class ObjectivesController {
     const { sub: userId } = req.user;
 
     return await this.objectivesService.createObjective(bodyData, userId);
+  }
+
+  @Get(':id')
+  async getObjective(@Param('id') id: string) {
+    return await this.objectivesService.getObjective(id);
   }
 
   @Get('')
