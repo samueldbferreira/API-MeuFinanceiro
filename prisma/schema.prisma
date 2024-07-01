@@ -23,6 +23,7 @@ model User {
 
   family     Family?     @relation(fields: [familyId], references: [id])
   objectives Objective[]
+  transactions Transaction[]
 }
 
 model Objective {
@@ -41,4 +42,17 @@ model Family {
 
   members    User[]
   objectives Objective[]
+}
+
+model Transaction {
+  id       String @id @default(uuid()) @map("_id")
+  userId   String
+  title    String
+  amount    Float
+  category String
+  type     String
+  isInstallment Boolean
+  installmentCount   Int?
+  
+  creator User   @relation(fields: [userId], references: [id])
 }
