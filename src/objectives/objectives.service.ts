@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateObjectiveDTO } from './dto/CreateObjectiveDTO';
 import { FamiliesService } from 'src/families/families.service';
@@ -53,5 +53,16 @@ export class ObjectivesService {
     }
 
     return objective;
+  }
+
+  async deleteObjective(objectiveId: string) {
+    const objective = await this.prisma.objective.findUnique({
+      where: { id: objectiveId },
+    });
+    if (!objective) {
+      throw new BadRequestException("ID do objetivo é inválido");
+    }
+
+    await this.prisma.objective.delete({ where: { id: objectiveId } });
   }
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -34,5 +35,10 @@ export class ObjectivesController {
     const { sub: userId } = req.user;
 
     return await this.objectivesService.getObjectives(userId);
+  }
+
+  @Delete(":id")
+  async deleteObjective(@Param('id') id: string) {
+    return await this.objectivesService.deleteObjective(id);
   }
 }
