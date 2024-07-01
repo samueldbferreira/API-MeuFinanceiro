@@ -42,12 +42,14 @@ export class ObjectivesService {
 
     return await this.prisma.objective.findMany({
       where: { familyId: user.familyId },
+      include: { creator: { select: { firstName: true, lastName: true } } }
     });
   }
 
   async getObjective(objectiveId: string) {
     const objective = await this.prisma.objective.findUnique({
       where: { id: objectiveId },
+      include: { creator: { select: { firstName: true, lastName: true } } }
     });
     if (!objective) {
       return null;
